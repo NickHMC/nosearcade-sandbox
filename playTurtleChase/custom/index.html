@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>The Nose Arcade | TurtleChase [Custom Model]</title>
+
+    <!-- Unity -->
+    <script src="Build/UnityLoader.js"></script>
+    <script>
+      var gameInstance = UnityLoader.instantiate("gameContainer", "Build/CurrentBuild.json");
+    </script>
+    
+    <script src="controller.js"></script>
+
+  </head>
+  
+  <body>
+    <!-- Unity loads game here -->
+    <div id="gameContainer" style="width: 960px; height: 600px; margin: auto"></div>
+    <!-- Webcam video loads here -->
+    <video hidden autoplay playsinline muted id="webcam" width="160" height="160"></video>
+    <!-- Load run_model.js after the content of the page -->
+    <script src='customModel.js'></script>
+  </body>
+</html>
