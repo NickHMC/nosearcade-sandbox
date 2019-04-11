@@ -42,8 +42,8 @@ imported.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.1';
 imported.onload = async function(){
   // Set up
   await setupWebcam();
-  model = await tf.loadLayersModel('https://matthewcalligaro.github.io/TheNoseArcade/playTurtleChase/custom/model.json');
-  // model = await tf.loadLayersModel('https://giselleserate.github.io/nosearcade-sandbox/playTurtleChase/custom/model.json');
+  // model = await tf.loadLayersModel('https://matthewcalligaro.github.io/TheNoseArcade/playTurtleChase/custom/model.json');
+  model = await tf.loadLayersModel('https://giselleserate.github.io/nosearcade-sandbox/playTurtleChase/custom/model.json');
 
   // Process the video
   interval = window.setInterval(function () {
