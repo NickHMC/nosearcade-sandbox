@@ -1,5 +1,5 @@
 // Model and output
-var model;
+let model;
 let noseX;
 let noseY;
 
@@ -53,7 +53,12 @@ function processVideo() {
   const img = image.reshape([1, vidWidth, vidHeight, 3]);
 
   // Predict
-  const prediction = model.predict(img);
+  try {
+    const prediction = model.predict(img);
+  }
+  catch (err) {
+    console.log('not loaded');
+  }
 
   // Record the result
   prediction.array().then(function(result) {
