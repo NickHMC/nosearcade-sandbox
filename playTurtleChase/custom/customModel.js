@@ -52,12 +52,15 @@ function processVideo() {
   const image = tf.browser.fromPixels(webcamElement);  // for example
   const img = image.reshape([1, vidWidth, vidHeight, 3]);
 
+  let prediction;
+  
   // Predict
   try {
-    const prediction = model.predict(img);
+    prediction = model.predict(img);
   }
   catch (err) {
     console.log('not loaded');
+    return;
   }
 
   // Record the result
