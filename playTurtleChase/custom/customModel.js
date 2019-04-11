@@ -1,15 +1,7 @@
-var imported = document.createElement('script');
-document.head.appendChild(imported);
-
 // Model and output
 var model;
 let noseX;
 let noseY;
-
-// Evaluating
-var interval;
-var start = 0;
-var ticks = 0;
 
 let overlay;
 let video;
@@ -17,8 +9,8 @@ let video;
 let vidWidth = 160;
 let vidHeight = 160;
 
+let webcamElement;
 // Set up the webcam
-let webcamElement = document.querySelector('#videoContainer > video');
 // const webcamElement = document.getElementById('webcam');
 // async function setupWebcam() {
 //   return new Promise((resolve, reject) => {
@@ -40,8 +32,8 @@ let webcamElement = document.querySelector('#videoContainer > video');
 // }
 
 // Start the loading process
-imported.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.1';
-
+// imported.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.1';
+/*
 imported.onload = async function(){
   // Set up
   // await setupWebcam();
@@ -53,6 +45,7 @@ imported.onload = async function(){
     processVideo();
   }, 1);
 };
+*/
 
 function processVideo() {
   // Create the array
@@ -78,7 +71,9 @@ function setup() {
   // Webcam capture
   video = createCapture(VIDEO);
   video.size(vidWidth, vidHeight);
-  video.parent('videoContainer')
+  video.parent('videoContainer');
+
+  webcamElement = document.querySelector('#videoContainer > video');
 
   // Graphics overlay for monitor annotations
   pixelDensity(1);
@@ -93,12 +88,20 @@ function setup() {
   // Flip graphics so you get proper mirroring of video and nose dot
   overlay.translate(vidWidth,0);
   overlay.scale(-1.0, 1.0);
+
+  model = tf.loadLayersModel('https://giselleserate.github.io/nosearcade-sandbox/playTurtleChase/custom/model.json');
+
+  // interval = window.setInterval(function () {
+  //   processVideo();
+  // }, 1);
 }
 
 /**
  * Function that p5 calls repeatedly to render graphics
  */
 function draw() {
+  processVideo();
+
   overlay.clear();
 
   // Render video
