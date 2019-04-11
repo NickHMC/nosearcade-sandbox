@@ -9,6 +9,12 @@ var interval;
 var start = 0;
 var ticks = 0;
 
+let overlay;
+let img;
+
+let vidWidth = 160;
+let vidHeight = 160;
+
 // Set up the webcam
 const webcamElement = document.getElementById('webcam');
 async function setupWebcam() {
@@ -36,19 +42,19 @@ imported.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.1';
 imported.onload = async function(){
   // Set up
   await setupWebcam();
-  // model = await tf.loadLayersModel('https://matthewcalligaro.github.io/TheNoseArcade/playTurtleChase/custom/model.json');
-  model = await tf.loadLayersModel('https://giselleserate.github.io/nosearcade-sandbox/playTurtleChase/custom/model.json');
+  model = await tf.loadLayersModel('https://matthewcalligaro.github.io/TheNoseArcade/playTurtleChase/custom/model.json');
+  // model = await tf.loadLayersModel('https://giselleserate.github.io/nosearcade-sandbox/playTurtleChase/custom/model.json');
 
   // Process the video
   interval = window.setInterval(function () {
-    process_video();
+    processVideo();
   }, 1);
 };
 
-function process_video() {
+function processVideo() {
   // Create the array
   const image = tf.browser.fromPixels(webcamElement);  // for example
-  const img = image.reshape([1, 160, 160, 3]);
+  img = image.reshape([1, vidWidth, vidHeight, 3]);
 
   // Predict
   const prediction = model.predict(img);
@@ -63,14 +69,46 @@ function process_video() {
 }
 
 /**
+ * Function that p5 calls initially to set up graphics
+ */
+function setup() {
+  // Graphics overlay for monitor annotations
+  pixelDensity(1);
+  overlay = createGraphics(vidWidth, vidHeight);
+  overlay.parent('videoContainer');
+
+  // Show graphics
+  overlay.show();
+  // Flip graphics so you get proper mirroring of video and nose dot
+  overlay.translate(vidWidth,0);
+  overlay.scale(-1.0, 1.0);
+}
+
+/**
+ * Function that p5 calls repeatedly to render graphics
+ */
+function draw() {
+  overlay.clear();
+
+  // Render video
+  overlay.image(img, 0, 0);
+
+  // Render nose dot
+  overlay.stroke(0, 225, 0); // Green
+  overlay.strokeWeight(5);
+  overlay.ellipse(noseX, noseY, 1, 1);
+}
+
+
+/**
  * Send new nose coordinates to the game
  * @param x the x position of the nose
  * @param y the y position of the nose
  */
 function sendCoords(x, y) {
-  // Truncate to int
-  let fixedNoseX = parseInt(x);
-  let fixedNoseY = parseInt(y);
+  // Truncate to int and invert both axes
+  let fixedNoseX = parseInt(vidWidth - x);
+  let fixedNoseY = parseInt(vidHeight - y);
 
   // Bitpack x into bits 0-9, y into 10-19
   let packedCoords = 0;
@@ -80,13 +118,9 @@ function sendCoords(x, y) {
   // Bottom 9 bits get corrupted; move coords out of the way
   packedCoords = packedCoords << 9;
 
-  // TODO: add this to the C# code in place of existing
-  // int x = (packed >> 9) & 0x3FF;
-  // int y = (packed >> 19) & 0x3FF;
-
   // Attempt to send packed coordinates to the game
   try {
-    gameInstance.SendMessage('Player', 'UpdateFacePosition', packedCoords);
+    gameInstance.SendMessage('Controller', 'UpdateFacePosition', packedCoords);
     console.log('Success - Coordinates ' + fixedNoseX + ', ' + fixedNoseY + ' sent successfully.');
   } catch (err) {
     console.log('Failure - Coordinates ' + fixedNoseX + ', ' + fixedNoseY + ' failed to send: ' + err);

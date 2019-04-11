@@ -6,6 +6,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>The Nose Arcade | TurtleChase [Custom Model]</title>
 
+    <!-- P5 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.dom.min.js"></script>
+
     <!-- Unity -->
     <script src="Build/UnityLoader.js"></script>
     <script>
@@ -19,9 +23,12 @@
   <body>
     <!-- Unity loads game here -->
     <div id="gameContainer" style="width: 960px; height: 600px; margin: auto"></div>
+
     <!-- Webcam video loads here -->
-    <video hidden autoplay playsinline muted id="webcam" width="160" height="160"></video>
-    <!-- Load run_model.js after the content of the page -->
+    <!-- Hide video by dropping opacity to make sure it still plays -->
+    <video autoplay playsinline muted id="webcam" width="160" height="160" style="opacity:0"></video>
+    
+    <!-- Load customModel.js after the content of the page -->
     <script src='customModel.js'></script>
   </body>
 </html>
