@@ -52,24 +52,21 @@ function processVideo() {
   const image = tf.browser.fromPixels(webcamElement);  // for example
   const img = image.reshape([1, vidWidth, vidHeight, 3]);
 
-  let prediction;
-  
+
   // Predict
   try {
-    prediction = model.predict(img);
+    const prediction = model.predict(img);
+    // Record the result
+    prediction.array().then(function(result) {
+      noseX = result[0][1];
+      noseY = result[0][0];
+  
+      sendCoords(noseX, noseY);
+    });
   }
   catch (err) {
     console.log('not loaded');
-    return;
   }
-
-  // Record the result
-  prediction.array().then(function(result) {
-    noseX = result[0][1];
-    noseY = result[0][0];
-
-    sendCoords(noseX, noseY);
-  });
 }
 
 /**
