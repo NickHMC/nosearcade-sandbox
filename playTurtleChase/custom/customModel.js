@@ -3,6 +3,8 @@ document.head.appendChild(imported);
 
 // Model and output
 var model;
+let noseX;
+let noseY;
 
 // Evaluating
 var interval;
