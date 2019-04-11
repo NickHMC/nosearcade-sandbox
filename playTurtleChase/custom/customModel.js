@@ -18,32 +18,33 @@ let vidWidth = 160;
 let vidHeight = 160;
 
 // Set up the webcam
-const webcamElement = document.getElementById('webcam');
-async function setupWebcam() {
-  return new Promise((resolve, reject) => {
-    const navigatorAny = navigator;
-    navigator.getUserMedia = navigator.getUserMedia ||
-      navigatorAny.webkitGetUserMedia || navigatorAny.mozGetUserMedia ||
-      navigatorAny.msGetUserMedia;
-    if (navigator.getUserMedia) {
-      navigator.getUserMedia({video: true},
-      stream => {
-        webcamElement.srcObject = stream;
-        webcamElement.addEventListener('loadeddata',  () => resolve(), false);
-      },
-      error => reject());
-    } else {
-      reject();
-    }
-  });
-}
+const webcamElement = document.querySelector('#videoContainer>video');
+// const webcamElement = document.getElementById('webcam');
+// async function setupWebcam() {
+//   return new Promise((resolve, reject) => {
+//     const navigatorAny = navigator;
+//     navigator.getUserMedia = navigator.getUserMedia ||
+//       navigatorAny.webkitGetUserMedia || navigatorAny.mozGetUserMedia ||
+//       navigatorAny.msGetUserMedia;
+//     if (navigator.getUserMedia) {
+//       navigator.getUserMedia({video: true},
+//       stream => {
+//         webcamElement.srcObject = stream;
+//         webcamElement.addEventListener('loadeddata',  () => resolve(), false);
+//       },
+//       error => reject());
+//     } else {
+//       reject();
+//     }
+//   });
+// }
 
 // Start the loading process
 imported.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.1';
 
 imported.onload = async function(){
   // Set up
-  await setupWebcam();
+  // await setupWebcam();
   // model = await tf.loadLayersModel('https://matthewcalligaro.github.io/TheNoseArcade/playTurtleChase/custom/model.json');
   model = await tf.loadLayersModel('https://giselleserate.github.io/nosearcade-sandbox/playTurtleChase/custom/model.json');
 
