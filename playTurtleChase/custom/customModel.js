@@ -10,7 +10,7 @@ var start = 0;
 var ticks = 0;
 
 let overlay;
-let img;
+let video;
 
 let vidWidth = 160;
 let vidHeight = 160;
@@ -54,7 +54,7 @@ imported.onload = async function(){
 function processVideo() {
   // Create the array
   const image = tf.browser.fromPixels(webcamElement);  // for example
-  img = image.reshape([1, vidWidth, vidHeight, 3]);
+  const img = image.reshape([1, vidWidth, vidHeight, 3]);
 
   // Predict
   const prediction = model.predict(img);
@@ -72,6 +72,11 @@ function processVideo() {
  * Function that p5 calls initially to set up graphics
  */
 function setup() {
+  // Webcam capture
+  video = createCapture(VIDEO);
+  video.size(vidWidth, vidHeight);
+  video.parent('videoContainer')
+
   // Graphics overlay for monitor annotations
   pixelDensity(1);
   overlay = createGraphics(vidWidth, vidHeight);
@@ -91,7 +96,7 @@ function draw() {
   overlay.clear();
 
   // Render video
-  overlay.image(img, 0, 0);
+  overlay.image(video, 0, 0);
 
   // Render nose dot
   overlay.stroke(0, 225, 0); // Green
