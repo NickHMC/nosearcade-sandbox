@@ -18,7 +18,7 @@ let vidWidth = 160;
 let vidHeight = 160;
 
 // Set up the webcam
-const webcamElement = document.querySelector('#videoContainer>video');
+let webcamElement = document.querySelector('#videoContainer > video');
 // const webcamElement = document.getElementById('webcam');
 // async function setupWebcam() {
 //   return new Promise((resolve, reject) => {
@@ -84,6 +84,9 @@ function setup() {
   pixelDensity(1);
   overlay = createGraphics(vidWidth, vidHeight);
   overlay.parent('videoContainer');
+
+  // Hide the video so it doesn't render
+  video.hide();
 
   // Show graphics
   overlay.show();
