@@ -96,7 +96,7 @@ function processVideo() {
     return;
   }
 
-  console.log(faces.get(0));
+  let transforms = faces.get(0);
 
   // Get region of interest
   let roiSrc = src.roi(faces.get(0));
@@ -116,11 +116,12 @@ function processVideo() {
 
   // Record the result
   prediction.array().then(function(result) {
+    console.log(this);
     noseX = result[0][0];
     noseY = result[0][1];
 
     sendCoords(noseX, noseY);
-  });
+  }).bind(transforms);
 }
 
 /**
