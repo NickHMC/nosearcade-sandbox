@@ -118,7 +118,6 @@ function processVideo() {
       sendCoords(noseX, noseY);
     });
 
-    dsize.delete();
     imgData.delete();
   }
 
