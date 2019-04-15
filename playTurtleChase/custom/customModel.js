@@ -14,8 +14,8 @@ var ticks = 0;
 let overlay;
 let video;
 
-let vidWidth = 160;
-let vidHeight = 160;
+let vidWidth = 240;
+let vidHeight = 240;
 
 let boundX;
 let boundY;
@@ -175,7 +175,8 @@ function draw() {
   // TODO remove below overlay debuggy things thanks <3
   // Render bounding box
   overlay.stroke(255, 0, 0); // Red
-  overlay.rect(boundX, boundY, boundX + boundWidth, boundY + boundHeight);
+  overlay.noFill();
+  overlay.rect(boundX, boundY, boundWidth, boundHeight);
 
   // Render bounding origin dot
   overlay.stroke(0, 0, 255); // Blue
