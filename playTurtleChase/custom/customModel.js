@@ -91,38 +91,36 @@ function processVideo() {
   let msize = new cv.Size(0, 0);
   classifier.detectMultiScale(gray, faces, 1.1, 3, 0, msize, msize);
 
-  // If faces detected, proceed
-  if (faces.size() > 0) {
-    console.log(faces);
-    
-    // Get region of interest
-    let roiSrc = src.roi(faces.get(0));
-
-    let dsize = new cv.Size(96, 96);
-    // You can try more different parameters
-    cv.resize(roiSrc, face, dsize, 0, 0, cv.INTER_AREA);
-
-    // Convert to ImageData
-    let imgData = new ImageData(new Uint8ClampedArray(face.data),face.cols,face.rows);
-
-    const image = tf.browser.fromPixels(imgData);
-    const img = image.reshape([1, 96, 96, 3]);
-
-    // Predict
-    const prediction = model.predict(img);
-
-    // Record the result
-    prediction.array().then(function(result) {
-      noseX = result[0][0];
-      noseY = result[0][1];
-
-      sendCoords(noseX, noseY);
-    });
-
-    imgData.delete();
+  // If no faces detected, stop
+  if (faces.size() == 0) {
+    return;
   }
 
-  faces.delete();
+  console.log(faces.get(0));
+
+  // Get region of interest
+  let roiSrc = src.roi(faces.get(0));
+
+  let dsize = new cv.Size(96, 96);
+  // You can try more different parameters
+  cv.resize(roiSrc, face, dsize, 0, 0, cv.INTER_AREA);
+
+  // Convert to ImageData
+  let imgData = new ImageData(new Uint8ClampedArray(face.data),face.cols,face.rows);
+
+  const image = tf.browser.fromPixels(imgData);
+  const img = image.reshape([1, 96, 96, 3]);
+
+  // Predict
+  const prediction = model.predict(img);
+
+  // Record the result
+  prediction.array().then(function(result) {
+    noseX = result[0][0];
+    noseY = result[0][1];
+
+    sendCoords(noseX, noseY);
+  });
 }
 
 /**
