@@ -17,6 +17,11 @@ let video;
 let vidWidth = 160;
 let vidHeight = 160;
 
+let boundX;
+let boundY;
+let boundWidth;
+let boundHeight;
+
 let src;
 let cap;
 let gray;
@@ -116,12 +121,17 @@ function processVideo() {
 
   // Record the result
   prediction.array().then(function(result) {
-    console.log(this);
-    noseX = result[0][0];
-    noseY = result[0][1];
+
+    noseX = (result[0][0] * this.width / 93.0) + this.x;
+    noseY = (result[0][1] * this.height / 93.0) + this.y;
+
+    boundX = this.x;
+    boundY = this.y;
+    boundWidth = this.width;
+    boundHeight = this.height;
 
     sendCoords(noseX, noseY);
-  }).bind(transforms);
+  }.bind(transforms));
 }
 
 /**
@@ -161,6 +171,15 @@ function draw() {
   overlay.stroke(0, 225, 0); // Green
   overlay.strokeWeight(5);
   overlay.ellipse(noseX, noseY, 1, 1);
+
+  // TODO remove below overlay debuggy things thanks <3
+  // Render bounding box
+  overlay.stroke(255, 0, 0); // Red
+  overlay.rect(boundX, boundY, boundX + boundWidth, boundY + boundHeight);
+
+  // Render bounding origin dot
+  overlay.stroke(0, 0, 255); // Blue
+  overlay.ellipse(boundX, boundY, 1, 1);
 }
 
 
