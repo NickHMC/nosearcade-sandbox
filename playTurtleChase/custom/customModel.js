@@ -17,6 +17,27 @@ let video;
 let vidWidth = 160;
 let vidHeight = 160;
 
+let src;
+let cap;
+let gray;
+let face;
+let classifier;
+cv['onRuntimeInitialized']=()=>{
+  // Create desired matricies
+  src = new cv.Mat(webcamElement.height, webcamElement.width, cv.CV_8UC4);
+  cap = new cv.VideoCapture(webcam); 
+  gray = new cv.Mat();
+  face = new cv.Mat();
+
+  classifier = new cv.CascadeClassifier();  // initialize classifier
+  let utils = new Utils('errorMessage'); //use utils class
+  let faceCascadeFile = 'haarcascade_frontalface_default.xml'; // path to xml
+  // use createFileFromUrl to "pre-build" the xml
+  utils.createFileFromUrl(faceCascadeFile, faceCascadeFile, () => {
+    classifier.load(faceCascadeFile); // in the callback, load the cascade from file 
+  });
+}
+
 // Set up the webcam
 const webcamElement = document.getElementById('webcam');
 async function setupWebcam() {
@@ -44,8 +65,8 @@ imported.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.1';
 imported.onload = async function(){
   // Set up
   await setupWebcam();
-  model = await tf.loadLayersModel('https://matthewcalligaro.github.io/TheNoseArcade/playTurtleChase/custom/model.json');
-  // model = await tf.loadLayersModel('https://giselleserate.github.io/nosearcade-sandbox/playTurtleChase/custom/model.json');
+  // model = await tf.loadLayersModel('https://matthewcalligaro.github.io/TheNoseArcade/playTurtleChase/custom/model.json');
+  model = await tf.loadLayersModel('https://giselleserate.github.io/nosearcade-sandbox/playTurtleChase/custom/model.json');
 
   // Process the video
   interval = window.setInterval(function () {
@@ -56,18 +77,53 @@ imported.onload = async function(){
 function processVideo() {
   // Create the array
   const image = tf.browser.fromPixels(webcamElement);  // for example
-  const img = image.reshape([1, vidWidth, vidHeight, 3]);
 
-  // Predict
-  const prediction = model.predict(img);
+  // Capturing the image as an OpenCV.js image
+  cap.read(src);
 
-  // Record the result
-  prediction.array().then(function(result) {
-    noseX = result[0][1];
-    noseY = result[0][0];
+  // Identify the face
+  cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+  
+  // Initialize bounding box
+  let faces = new cv.RectVector();
 
-    sendCoords(noseX, noseY);
-  });
+  // Detect faces
+  let msize = new cv.Size(0, 0);
+  classifier.detectMultiScale(gray, faces, 1.1, 3, 0, msize, msize);
+
+  // If faces detected, proceed
+  if (faces.size() > 0) {
+
+    // Get region of interest
+    let roiSrc = src.roi(faces.get(0));
+
+    let dsize = new cv.Size(96, 96);
+    // You can try more different parameters
+    cv.resize(roiSrc, face, dsize, 0, 0, cv.INTER_AREA);
+
+    // Convert to ImageData
+    let imgData = new ImageData(new Uint8ClampedArray(face.data),face.cols,face.rows);
+
+    const image = tf.browser.fromPixels(imgData);
+    const img = image.reshape([1, 96, 96, 3]);
+
+    // Predict
+    const prediction = model.predict(img);
+
+    // Record the result
+    prediction.array().then(function(result) {
+      noseX = result[0][0];
+      noseY = result[0][1];
+
+      sendCoords(noseX, noseY);
+    });
+
+    dsize.delete();
+    imgData.delete();
+  }
+
+  faces.delete();
+  msize.delete();
 }
 
 /**
