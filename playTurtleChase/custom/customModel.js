@@ -17,11 +17,11 @@ let video;
 let vidWidth = 240;
 let vidHeight = 240;
 
-// Bounding box overlay code
-// let boundX;
-// let boundY;
-// let boundWidth;
-// let boundHeight;
+Bounding box overlay code
+let boundX;
+let boundY;
+let boundWidth;
+let boundHeight;
 
 let src;
 let cap;
@@ -124,10 +124,10 @@ function processVideo() {
     noseY = this.height - (result[0][1] * this.height / 93.0) + this.y;
 
     // Bounding box overlay code
-    // boundX = this.x;
-    // boundY = this.y;
-    // boundWidth = this.width;
-    // boundHeight = this.height;
+    boundX = this.x;
+    boundY = this.y;
+    boundWidth = this.width;
+    boundHeight = this.height;
 
     sendCoords(noseX, noseY);
   }.bind(faceTransforms));
@@ -172,14 +172,14 @@ function draw() {
   overlay.ellipse(noseX, noseY, 1, 1);
 
   // Bounding box overlay code
-  // // Render bounding box
-  // overlay.stroke(255, 0, 0); // Red
-  // overlay.noFill();
-  // overlay.rect(boundX, boundY, boundWidth, boundHeight);
+  // Render bounding box
+  overlay.stroke(255, 0, 0); // Red
+  overlay.noFill();
+  overlay.rect(boundX, boundY, boundWidth, boundHeight);
 
-  // // Render bounding origin dot
-  // overlay.stroke(0, 0, 255); // Blue
-  // overlay.ellipse(boundX, boundY, 1, 1);
+  // Render bounding origin dot
+  overlay.stroke(0, 0, 255); // Blue
+  overlay.ellipse(boundX, boundY, 1, 1);
 }
 
 
