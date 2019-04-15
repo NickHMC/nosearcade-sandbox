@@ -76,7 +76,7 @@ imported.onload = async function(){
 
 function processVideo() {
   // Create the array
-  const image = tf.browser.fromPixels(webcamElement);  // for example
+  // const image = tf.browser.fromPixels(webcamElement);  // for example
 
   // Capturing the image as an OpenCV.js image
   cap.read(src);
