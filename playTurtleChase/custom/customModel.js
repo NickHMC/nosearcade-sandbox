@@ -17,7 +17,7 @@ let video;
 let vidWidth = 240;
 let vidHeight = 240;
 
-Bounding box overlay code
+// Bounding box overlay code
 let boundX;
 let boundY;
 let boundWidth;
