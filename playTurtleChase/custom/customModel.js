@@ -93,7 +93,8 @@ function processVideo() {
 
   // If faces detected, proceed
   if (faces.size() > 0) {
-
+    console.log(faces);
+    
     // Get region of interest
     let roiSrc = src.roi(faces.get(0));
 
