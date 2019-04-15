@@ -123,7 +123,6 @@ function processVideo() {
   }
 
   faces.delete();
-  msize.delete();
 }
 
 /**
