@@ -17,10 +17,11 @@ let video;
 let vidWidth = 240;
 let vidHeight = 240;
 
-let boundX;
-let boundY;
-let boundWidth;
-let boundHeight;
+// Bounding box overlay code
+// let boundX;
+// let boundY;
+// let boundWidth;
+// let boundHeight;
 
 let src;
 let cap;
@@ -80,10 +81,7 @@ imported.onload = async function(){
 };
 
 function processVideo() {
-  // Create the array
-  // const image = tf.browser.fromPixels(webcamElement);  // for example
-
-  // Capturing the image as an OpenCV.js image
+  // Capture the image as an OpenCV.js image
   cap.read(src);
 
   // Identify the face
@@ -101,13 +99,12 @@ function processVideo() {
     return;
   }
 
-  let transforms = faces.get(0);
+  let faceTransforms = faces.get(0);
 
   // Get region of interest
-  let roiSrc = src.roi(faces.get(0));
+  let roiSrc = src.roi(faceTransforms);
 
   let dsize = new cv.Size(96, 96);
-  // You can try more different parameters
   cv.resize(roiSrc, face, dsize, 0, 0, cv.INTER_AREA);
 
   // Convert to ImageData
@@ -123,15 +120,17 @@ function processVideo() {
   prediction.array().then(function(result) {
 
     noseX = (result[0][0] * this.width / 93.0) + this.x;
-    noseY = (result[0][1] * this.height / 93.0) + this.y;
+    // TODO This is pretty weird and I'm not sure if it jives with the coordinate system, but that is the nose.
+    noseY = this.height - (result[0][1] * this.height / 93.0) + this.y;
 
-    boundX = this.x;
-    boundY = this.y;
-    boundWidth = this.width;
-    boundHeight = this.height;
+    // Bounding box overlay code
+    // boundX = this.x;
+    // boundY = this.y;
+    // boundWidth = this.width;
+    // boundHeight = this.height;
 
     sendCoords(noseX, noseY);
-  }.bind(transforms));
+  }.bind(faceTransforms));
 }
 
 /**
@@ -172,15 +171,15 @@ function draw() {
   overlay.strokeWeight(5);
   overlay.ellipse(noseX, noseY, 1, 1);
 
-  // TODO remove below overlay debuggy things thanks <3
-  // Render bounding box
-  overlay.stroke(255, 0, 0); // Red
-  overlay.noFill();
-  overlay.rect(boundX, boundY, boundWidth, boundHeight);
+  // Bounding box overlay code
+  // // Render bounding box
+  // overlay.stroke(255, 0, 0); // Red
+  // overlay.noFill();
+  // overlay.rect(boundX, boundY, boundWidth, boundHeight);
 
-  // Render bounding origin dot
-  overlay.stroke(0, 0, 255); // Blue
-  overlay.ellipse(boundX, boundY, 1, 1);
+  // // Render bounding origin dot
+  // overlay.stroke(0, 0, 255); // Blue
+  // overlay.ellipse(boundX, boundY, 1, 1);
 }
 
 
