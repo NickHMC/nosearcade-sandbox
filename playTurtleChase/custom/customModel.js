@@ -171,15 +171,15 @@ function draw() {
   overlay.strokeWeight(5);
   overlay.ellipse(noseX, noseY, 1, 1);
 
-  // // Bounding box overlay code
-  // // Render bounding box
-  // overlay.stroke(255, 0, 0); // Red
-  // overlay.noFill();
-  // overlay.rect(boundX, boundY, boundWidth, boundHeight);
+  // Bounding box overlay code
+  // Render bounding box
+  overlay.stroke(255, 0, 0); // Red
+  overlay.noFill();
+  overlay.rect(boundX, boundY, boundWidth, boundHeight);
 
-  // // Render bounding origin dot
-  // overlay.stroke(0, 0, 255); // Blue
-  // overlay.ellipse(boundX, boundY, 1, 1);
+  // Render bounding origin dot
+  overlay.stroke(0, 0, 255); // Blue
+  overlay.ellipse(boundX, boundY, 1, 1);
 }
 
 
