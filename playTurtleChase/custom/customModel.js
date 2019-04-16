@@ -87,6 +87,12 @@ function processVideo() {
   // Capture the image as an OpenCV.js image
   cap.read(src);
 
+  // src.copyTo(dst);
+  let uhsize = new cv.Size(vidHeight, vidWidth);
+  // Identify the face
+  cv.resize (src, dst, uhsize, -1, 1);
+  cv.cvtColor(dst, gray, cv.COLOR_RGBA2GRAY, 0);
+
   // Identify the face
   cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
   
@@ -124,7 +130,7 @@ function processVideo() {
 
     noseX = (result[0][0] * this.width / 93.0) + this.x;
     // TODO This is pretty weird and I'm not sure if it jives with the coordinate system, but that is the nose.
-    noseY = this.height - (result[0][1] * this.height / 93.0) + this.y;
+    noseY = (result[0][1] * this.height / 93.0) + this.y;
 
     // Bounding box overlay code
     boundX = this.x;
@@ -134,7 +140,10 @@ function processVideo() {
 
     let point1 = new cv.Point(boundX, boundY);
     let point2 = new cv.Point(boundX + boundWidth, boundY + boundHeight);
+    let point3 = new cv.Point(noseX, noseY);
     cv.rectangle(dst, point1, point2, [255, 0, 0, 255]);
+    cv.circle(dst, point3, 1, [0, 255, 0, 255]);
+    
     cv.imshow(outputElement, dst);
 
     sendCoords(noseX, noseY);
