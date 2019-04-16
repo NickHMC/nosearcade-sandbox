@@ -170,7 +170,7 @@ function setup() {
   // Show graphics
   overlay.show();
   // Flip graphics so you get proper mirroring of video and nose dot
-  overlay.translate(vidWidth,0);
+  overlay.translate(640,0);
   overlay.scale(-1.0, 1.0);
 }
 
