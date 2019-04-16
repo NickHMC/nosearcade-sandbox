@@ -129,6 +129,11 @@ function processVideo() {
     boundWidth = this.width;
     boundHeight = this.height;
 
+    let point1 = new cv.Point(boundX, boundY);
+    let point2 = new cv.Point(boundX + boundWidth, boundY + boundHeight);
+    cv.rectangle(dst, point1, point2, [255, 0, 0, 255]);
+    cv.imshow('canvasOutput', dst);
+
     sendCoords(noseX, noseY);
   }.bind(faceTransforms));
 }
@@ -171,15 +176,15 @@ function draw() {
   overlay.strokeWeight(5);
   overlay.ellipse(noseX, noseY, 1, 1);
 
-  // Bounding box overlay code
-  // Render bounding box
-  overlay.stroke(255, 0, 0); // Red
-  overlay.noFill();
-  overlay.rect(boundX, boundY, boundWidth, boundHeight);
+  // // Bounding box overlay code
+  // // Render bounding box
+  // overlay.stroke(255, 0, 0); // Red
+  // overlay.noFill();
+  // overlay.rect(boundX, boundY, boundWidth, boundHeight);
 
-  // Render bounding origin dot
-  overlay.stroke(0, 0, 255); // Blue
-  overlay.ellipse(boundX, boundY, 1, 1);
+  // // Render bounding origin dot
+  // overlay.stroke(0, 0, 255); // Blue
+  // overlay.ellipse(boundX, boundY, 1, 1);
 }
 
 
