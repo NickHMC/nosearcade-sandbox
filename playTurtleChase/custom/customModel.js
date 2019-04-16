@@ -48,6 +48,7 @@ cv['onRuntimeInitialized']=()=>{
 
 // Set up the webcam
 const webcamElement = document.getElementById('webcam');
+const outputElement = document.getElementById('canvasOutput');
 async function setupWebcam() {
   return new Promise((resolve, reject) => {
     const navigatorAny = navigator;
@@ -134,7 +135,7 @@ function processVideo() {
     let point1 = new cv.Point(boundX, boundY);
     let point2 = new cv.Point(boundX + boundWidth, boundY + boundHeight);
     cv.rectangle(dst, point1, point2, [255, 0, 0, 255]);
-    cv.imshow('canvasOutput', dst);
+    cv.imshow(outputElement, dst);
 
     sendCoords(noseX, noseY);
   }.bind(faceTransforms));
