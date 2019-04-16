@@ -156,12 +156,12 @@ function processVideo() {
 function setup() {
   // Webcam capture
   video = createCapture(VIDEO);
-  video.size(vidWidth, vidHeight);
+  video.size(640, 360);
   video.parent('videoContainer')
 
   // Graphics overlay for monitor annotations
   pixelDensity(1);
-  overlay = createGraphics(vidWidth, vidHeight);
+  overlay = createGraphics(640, 360);
   overlay.parent('videoContainer');
 
   // Hide the video so it doesn't render
