@@ -133,13 +133,13 @@ function processVideo() {
     noseY = (result[0][1] * this.height / 93.0) + this.y;
 
     // Bounding box overlay code
-    boundX = this.x;
-    boundY = this.y;
-    boundWidth = this.width;
-    boundHeight = this.height;
+    boundX = this.x * 640 / 240;
+    boundY = this.y * 360 / 240;
+    boundWidth = this.width * 640 / 240;
+    boundHeight = this.height * 360 / 240;
 
-    let point1 = new cv.Point(boundX, boundY);
-    let point2 = new cv.Point(boundX + boundWidth, boundY + boundHeight);
+    let point1 = new cv.Point(this.x, this.y);
+    let point2 = new cv.Point(this.x + this.width, this.y + this.height);
     let point3 = new cv.Point(noseX, noseY);
     cv.rectangle(dst, point1, point2, [255, 0, 0, 255]);
     cv.circle(dst, point3, 1, [0, 255, 0, 255]);
@@ -186,17 +186,17 @@ function draw() {
   // Render nose dot
   overlay.stroke(0, 225, 0); // Green
   overlay.strokeWeight(5);
-  overlay.ellipse(noseX, noseY, 1, 1);
+  overlay.ellipse(noseX  * 640 / 240, noseY * 360 / 240, 1, 1);
 
-  // // Bounding box overlay code
-  // // Render bounding box
-  // overlay.stroke(255, 0, 0); // Red
-  // overlay.noFill();
-  // overlay.rect(boundX, boundY, boundWidth, boundHeight);
+  // Bounding box overlay code
+  // Render bounding box
+  overlay.stroke(255, 0, 0); // Red
+  overlay.noFill();
+  overlay.rect(boundX, boundY, boundWidth, boundHeight);
 
-  // // Render bounding origin dot
-  // overlay.stroke(0, 0, 255); // Blue
-  // overlay.ellipse(boundX, boundY, 1, 1);
+  // Render bounding origin dot
+  overlay.stroke(0, 0, 255); // Blue
+  overlay.ellipse(boundX, boundY, 1, 1);
 }
 
 
