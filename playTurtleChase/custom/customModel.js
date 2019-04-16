@@ -22,7 +22,7 @@ let boundX;
 let boundY;
 let boundWidth;
 let boundHeight;
-let dst = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+let dst = new cv.Mat(vidHeight, vidWidth, cv.CV_8UC4);
 
 let src;
 let cap;
