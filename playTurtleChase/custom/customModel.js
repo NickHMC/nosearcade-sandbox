@@ -22,9 +22,9 @@ let boundX;
 let boundY;
 let boundWidth;
 let boundHeight;
-let dst = new cv.Mat(vidHeight, vidWidth, cv.CV_8UC4);
 
 let src;
+let dst;
 let cap;
 let gray;
 let face;
@@ -32,6 +32,7 @@ let classifier;
 cv['onRuntimeInitialized']=()=>{
   // Create desired matricies
   src = new cv.Mat(webcamElement.height, webcamElement.width, cv.CV_8UC4);
+  dst = new cv.Mat(vidHeight, vidWidth, cv.CV_8UC4)
   cap = new cv.VideoCapture(webcam); 
   gray = new cv.Mat();
   face = new cv.Mat();
