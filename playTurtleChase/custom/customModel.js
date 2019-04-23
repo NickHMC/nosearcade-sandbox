@@ -44,7 +44,26 @@ cv['onRuntimeInitialized']=()=>{
   utils.createFileFromUrl(faceCascadeFile, faceCascadeFile, () => {
     classifier.load(faceCascadeFile); // in the callback, load the cascade from file 
   });
-}
+};
+
+// Time stamps for the data collection.
+let timeStampChunks = ["Image UTC TimeStamps\r\n"];
+
+let snapNum = 0;
+// Image tag for saving the image.
+let image = document.createElement('image');
+image.style.display = "none"; // hide the image container.
+
+// To save a zip file.
+let zip = new JSZip();
+// Button to save the current data that you have taken.
+let downloadButton = document.getElementById('Download');
+
+downloadButton.addEventListener('click', (ev)=>{
+  // Call the snap shot function.
+  downloadData();
+  console.log("The data is being downloaded to the user's computer.")
+});
 
 // Set up the webcam
 const webcamElement = document.getElementById('webcam');
@@ -81,7 +100,7 @@ imported.onload = async function(){
   interval = window.setInterval(function () {
     processVideo();
   }, 1);
-};
+}
 
 function processVideo() {
   // Capture the image as an OpenCV.js image
@@ -105,6 +124,7 @@ function processVideo() {
 
   // If no faces detected, stop
   if (faces.size() == 0) {
+    takeSnapShot() // take a picture of the user because we were not able to detect the face.
     return;
   }
 
@@ -225,4 +245,69 @@ function sendCoords(x, y) {
   } catch (err) {
     console.log('Failure - Coordinates ' + fixedNoseX + ', ' + fixedNoseY + ' failed to send: ' + err);
   }
+}
+
+/**
+ * Download a zip file which contains the timestamps of the video frames,
+ * the timestamps and the (X,Y) positions of the nose as measured by PoseNet.
+ * It also contains a PNG file for every image that registered a detectNose()
+ * event.
+ */
+
+function downloadData(){
+  let blobTime = new Blob(timeStampChunks, {type: "text/plain;charset=utf-8"});
+
+  // Add the text files to the zip
+  zip.file("image_time_stamps.txt", blobTime);
+
+  zip.generateAsync({type:"blob"})
+  .then(function(zip) {
+    saveAs(zip, "images_from_user_test.zip");
+    }); // Force the downlod of the zip file.
+
+  // Reset the data parameters.
+  timeStampChunks = ["Image UTC TimeStamps\r\n"];
+  snapNum = 0;
+}
+
+/**
+ * Capture an image from the webcam stream and save it as a blob to the frames array.
+ *  It makes and then destroys a canvas upon which the frame from the video stream
+ *  is put and then transfered to the hidden image element. Saves the new image to the
+ * zip file which contains the training elements.
+ */
+function takeSnapShot(){
+  let hiddenCanvas = document.createElement('canvas'),
+  video = document.querySelector('video');
+
+  // Get the exact size of the video element.
+  width = video.videoWidth;
+  height = video.videoHeight;
+
+  document.body.appendChild(hiddenCanvas);
+  // Context object for working with the canvas.
+  context = hiddenCanvas.getContext('2d');
+
+  // Set the canvas to the same dimensions as the video.
+  hiddenCanvas.width = width;
+  hiddenCanvas.height = height;
+
+  // Draw a copy of the current frame from the video on the canvas.
+  context.drawImage(video, 0, 0, width, height);
+  hiddenCanvas.style.display = "none";
+  // Get an image dataURL from the canvas.
+  let imageDataURL = hiddenCanvas.toDataURL('image/png');
+
+  // Set the dataURL as source of an image element, hiding the captured photo.
+  image.setAttribute('src', imageDataURL);
+  image.style.display = "none";
+
+  hiddenCanvas.toBlob(function(blob){
+      let filename = "image"+snapNum+".png";
+      zip.file(filename, blob);
+      snapNum = snapNum + 1;
+      console.log("The number of images in the zip file is", snapNum);
+  },'image/png'); // Second arguement is the format to make the blob in.
+  
+  document.body.removeChild(hiddenCanvas); // Eliminate the canvas.
 }
