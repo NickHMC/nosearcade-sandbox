@@ -132,12 +132,12 @@ function processVideo() {
     let filename = "color_image"+snapNum+".png";
 
     //Convert the src image to a blob.
-    let imageBlob = Blob(src, {type: "image/png"});
+    let imageBlob = new Blob(src, {type: "image/png"});
     // Save the desired image.
     zip.file(filename, imageBlob);
 
     filename = "gray_image"+snapNum+".png";
-    let grayBlob = Blob(gray,{type:"image/png"});
+    let grayBlob = new Blob(gray,{type:"image/png"});
     zip.file(filename, grayBlob);
 
     snapNum = snapNum + 1;
