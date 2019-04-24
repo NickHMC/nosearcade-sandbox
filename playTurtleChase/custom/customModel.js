@@ -129,16 +129,16 @@ function processVideo() {
     console.log("Unable to find a face. Saving the image into a zip file for future reference.")
 
     // Compute the filename
-    let filename = "color_image"+snapNum+".png";
+    //let filename = "color_image"+snapNum+".png";
 
     //Convert the src image to a blob.
-    let imageBlob = new Blob(src, {type: "image/png"});
+    //let imageBlob = new Blob(src, {type: "image/png"});
     // Save the desired image.
-    zip.file(filename, imageBlob);
+    //zip.file(filename, imageBlob);
 
-    filename = "gray_image"+snapNum+".png";
+    let grayFilename = "gray_image"+snapNum+".png";
     let grayBlob = new Blob(gray,{type:"image/png"});
-    zip.file(filename, grayBlob);
+    zip.file(grayFilename, grayBlob);
 
     snapNum = snapNum + 1;
     
