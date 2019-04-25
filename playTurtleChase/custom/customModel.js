@@ -308,7 +308,7 @@ function renderImage(img, hiddenCanvas) {
   hiddenCanvas.height = img.rows;
   hiddenCanvas.width = img.cols;
   let imgData = new ImageData(
-    new Uint8ClampedArray(img.getData()),
+    new Uint8ClampedArray(img.data),
     img.cols,
     img.rows
   );
