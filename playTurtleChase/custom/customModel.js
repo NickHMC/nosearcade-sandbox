@@ -305,12 +305,10 @@ function saveImage(cvMatrix, fileType){
  * @param hiddenCanvas the canvas object upon which to display this image.
  */
 function renderImage(img, hiddenCanvas) {
-  let matRGBA = img.channels === 1 ? img.cvtColor(cv.COLOR_GRAY2RGBA) : img.cvtColor(cv.COLOR_BGR2RGBA);
-
   hiddenCanvas.height = img.rows;
   hiddenCanvas.width = img.cols;
   let imgData = new ImageData(
-    new Uint8ClampedArray(matRGBA.getData()),
+    new Uint8ClampedArray(img.getData()),
     img.cols,
     img.rows
   );
