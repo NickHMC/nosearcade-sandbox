@@ -137,14 +137,14 @@ function processVideo() {
     //zip.file(filename, imageBlob);
 
     // Convert to ImageData
-    let grayData = new ImageData(new Uint8ClampedArray(gray.data),gray.cols,gray.rows);
+    let srcData = new ImageData(new Uint8ClampedArray(src.data),src.cols,src.rows);
 
-    const imageGray = tf.browser.fromPixels(imgData);
-    const GrayImg = imageGray.reshape([1, 96, 96, 3]);
+    const imageSrc = tf.browser.fromPixels(srcData);
+    const sourceImgReshaped = imageSrc.reshape([1, 96, 96, 3]);
 
-    let grayFilename = "gray_image"+snapNum+".png";
-    let grayBlob = new Blob(GrayImg,{type:"image/png"});
-    zip.file(grayFilename, grayBlob);
+    let filename = "gray_image"+snapNum+".png";
+    let srcBlob = new Blob(sourceImgReshaped,{type:"image/png"});
+    zip.file(filename, srcBlob);
 
     snapNum = snapNum + 1;
     
