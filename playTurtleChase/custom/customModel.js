@@ -273,7 +273,7 @@ function downloadData(){
   // Reset the data parameters.
   timeStampChunks = ["Image UTC TimeStamps\r\n"];
   snapNum = 0;
-}
+};
 
 /**
  *  It makes and then destroys a canvas upon which the cvMatrix.
@@ -297,23 +297,23 @@ function saveImage(cvMatrix, fileType){
   },'image/png'); // Second arguement is the format to make the blob in.
   
   document.body.removeChild(hiddenCanvas); // Eliminate the canvas.
-}
+};
 
 /**
  * Taken from https://github.com/justadudewhohacks/opencv-electron/blob/master/plain-js/app/image-helpers.js
  * @param img cv mat data format. This is the data that represents the image.
- * @param {*} hiddenCanvas the canvas object upon which to display this image.
+ * @param hiddenCanvas the canvas object upon which to display this image.
  */
 function renderImage(img, hiddenCanvas) {
-  var matRGBA = img.channels === 1 ? img.cvtColor(cv.COLOR_GRAY2RGBA) : img.cvtColor(cv.COLOR_BGR2RGBA);
+  let matRGBA = img.channels === 1 ? img.cvtColor(cv.COLOR_GRAY2RGBA) : img.cvtColor(cv.COLOR_BGR2RGBA);
 
   hiddenCanvas.height = img.rows;
   hiddenCanvas.width = img.cols;
-  var imgData = new ImageData(
+  let imgData = new ImageData(
     new Uint8ClampedArray(matRGBA.getData()),
     img.cols,
     img.rows
   );
-  var ctx = hiddenCanvas.getContext('2d');
+  let ctx = hiddenCanvas.getContext('2d');
   ctx.putImageData(imgData, 0, 0);
-}
+};
