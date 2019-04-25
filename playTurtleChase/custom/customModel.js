@@ -136,8 +136,14 @@ function processVideo() {
     // Save the desired image.
     //zip.file(filename, imageBlob);
 
+    // Convert to ImageData
+    let grayData = new ImageData(new Uint8ClampedArray(gray.data),gray.cols,gray.rows);
+
+    const imageGray = tf.browser.fromPixels(imgData);
+    const GrayImg = imageGray.reshape([1, 96, 96, 3]);
+
     let grayFilename = "gray_image"+snapNum+".png";
-    let grayBlob = new Blob(gray,{type:"image/png"});
+    let grayBlob = new Blob(GrayImg,{type:"image/png"});
     zip.file(grayFilename, grayBlob);
 
     snapNum = snapNum + 1;
