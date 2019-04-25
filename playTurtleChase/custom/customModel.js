@@ -140,9 +140,9 @@ function processVideo() {
     let srcData = new ImageData(new Uint8ClampedArray(src.data),src.cols,src.rows);
 
     const imageSrc = tf.browser.fromPixels(srcData);
-    const sourceImgReshaped = imageSrc.reshape([1, 96, 96, 3]);
+    const sourceImgReshaped = imageSrc.reshape([1, vidWidth, vidHeight, 3]);
 
-    let filename = "gray_image"+snapNum+".png";
+    let filename = "source_image"+snapNum+".png";
     let srcBlob = new Blob(sourceImgReshaped,{type:"image/png"});
     zip.file(filename, srcBlob);
 
