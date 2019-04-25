@@ -137,13 +137,9 @@ function processVideo() {
     //zip.file(filename, imageBlob);
 
     // Convert to ImageData
-    let srcData = new ImageData(new Uint8ClampedArray(src.data),src.cols,src.rows);
-
-    const imageSrc = tf.browser.fromPixels(srcData);
-    const sourceImgReshaped = imageSrc.reshape([1, vidWidth, vidHeight, 3]);
+    let srcBlob = cv.blobFromImage(src, 1, {width: vidWidth, height: vidHeight}, swapRB=false, crop=false);
 
     let filename = "source_image"+snapNum+".png";
-    let srcBlob = new Blob(sourceImgReshaped,{type:"image/png"});
     zip.file(filename, srcBlob);
 
     snapNum = snapNum + 1;
