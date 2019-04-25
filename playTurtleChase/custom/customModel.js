@@ -61,6 +61,8 @@ downloadButton.addEventListener('click', (ev)=>{
   console.log("The data is being downloaded to the user's computer.")
 });
 
+let maxNumImages = 100; // Just a cap on the number of images so that the zip file doesn't take that long to compress.
+
 // Set up the webcam
 const webcamElement = document.getElementById('webcam');
 const outputElement = document.getElementById('canvasOutput');
@@ -273,15 +275,29 @@ function downloadData(){
   // Reset the data parameters.
   timeStampChunks = ["Image UTC TimeStamps\r\n"];
   snapNum = 0;
+
+  // Reset the zip file.
+
+  zip.forEach(function(relativePath, file){
+    console.log("removing the following item from the zip file.", relativePath);
+    zip.remove(relativePath);
+});
 };
 
 /**
- *  It makes and then destroys a canvas upon which the cvMatrix.
+ * Checks if the zip file is too big before saving the image. If there is space, then it proceeds. 
+ * It makes and then destroys a canvas upon which the cvMatrix.
  *  Saves the image to the zip file which contains the training elements.
  * @param cvMatrix the matrix which contrains the informaiton about the image.
  * @param fileType a string that indicates whether the file is gray or the source image.
  */
 function saveImage(cvMatrix, fileType){
+  if (snapNum >= maxNumImages){
+    // This has gone on long enough. Proceed with the download.
+    downloadData();
+    return
+  }
+
   let hiddenCanvas = document.createElement('canvas');
   document.body.appendChild(hiddenCanvas);
 
@@ -300,7 +316,7 @@ function saveImage(cvMatrix, fileType){
 };
 
 /**
- * Taken from https://github.com/justadudewhohacks/opencv-electron/blob/master/plain-js/app/image-helpers.js
+ * Adapted from https://github.com/justadudewhohacks/opencv-electron/blob/master/plain-js/app/image-helpers.js
  * @param img cv mat data format. This is the data that represents the image.
  * @param hiddenCanvas the canvas object upon which to display this image.
  */
