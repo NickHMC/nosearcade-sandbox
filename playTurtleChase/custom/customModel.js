@@ -137,7 +137,8 @@ function processVideo() {
     //zip.file(filename, imageBlob);
 
     // Convert to ImageData
-    let srcBlob = cv.blobFromImage(src, 1, {width: vidWidth, height: vidHeight}, swapRB=false, crop=false);
+    // Keep the original width, height and the original pixel value. Do not subtract the means. Do not swap R and B, and do not crop.
+    let srcBlob = cv.blobFromImage(src, 1, {width: vidWidth, height: vidHeight}, [0,0,0,0], false, false);
 
     let filename = "source_image"+snapNum+".png";
     zip.file(filename, srcBlob);
