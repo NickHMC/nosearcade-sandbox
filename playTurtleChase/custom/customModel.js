@@ -126,25 +126,9 @@ function processVideo() {
 
   // If no faces detected, stop
   if (faces.size() == 0) {
-    console.log("Unable to find a face. Saving the image into a zip file for future reference.")
-
-    // Compute the filename
-    //let filename = "color_image"+snapNum+".png";
-
-    //Convert the src image to a blob.
-    //let imageBlob = new Blob(src, {type: "image/png"});
-    // Save the desired image.
-    //zip.file(filename, imageBlob);
-
-    // Convert to ImageData
-    // Keep the original width, height and the original pixel value. Do not subtract the means. Do not swap R and B, and do not crop.
-    let srcBlob = cv.blobFromImage(src, 1, {width: vidWidth, height: vidHeight}, [0,0,0,0], false, false);
-
-    let filename = "source_image"+snapNum+".png";
-    zip.file(filename, srcBlob);
-
-    snapNum = snapNum + 1;
+    console.log("Unable to find a face. Saving the image into a zip file for future reference.");
     
+    saveImage(src, "source_");
     // Push the time of the photo to the array.
     timeStampChunks.push(currTime+'\r\n');
     return;
@@ -289,4 +273,47 @@ function downloadData(){
   // Reset the data parameters.
   timeStampChunks = ["Image UTC TimeStamps\r\n"];
   snapNum = 0;
+}
+
+/**
+ *  It makes and then destroys a canvas upon which the cvMatrix.
+ *  Saves the image to the zip file which contains the training elements.
+ * @param cvMatrix the matrix which contrains the informaiton about the image.
+ * @param fileType a string that indicates whether the file is gray or the source image.
+ */
+function saveImage(cvMatrix, fileType){
+  let hiddenCanvas = document.createElement('canvas');
+  document.body.appendChild(hiddenCanvas);
+
+  hiddenCanvas.style.display = "none";
+
+  renderImage(cvMatrix,hiddenCanvas); // Draws the image onto the canvas.
+
+  hiddenCanvas.toBlob(function(blob){
+      let filename = fileType+"image"+snapNum+".png";
+      zip.file(filename, blob);
+      snapNum = snapNum + 1;
+      console.log("The number of images in the zip file is", snapNum);
+  },'image/png'); // Second arguement is the format to make the blob in.
+  
+  document.body.removeChild(hiddenCanvas); // Eliminate the canvas.
+}
+
+/**
+ * Taken from https://github.com/justadudewhohacks/opencv-electron/blob/master/plain-js/app/image-helpers.js
+ * @param img cv mat data format. This is the data that represents the image.
+ * @param {*} hiddenCanvas the canvas object upon which to display this image.
+ */
+function renderImage(img, hiddenCanvas) {
+  var matRGBA = img.channels === 1 ? img.cvtColor(cv.COLOR_GRAY2RGBA) : img.cvtColor(cv.COLOR_BGR2RGBA);
+
+  hiddenCanvas.height = img.rows;
+  hiddenCanvas.width = img.cols;
+  var imgData = new ImageData(
+    new Uint8ClampedArray(matRGBA.getData()),
+    img.cols,
+    img.rows
+  );
+  var ctx = hiddenCanvas.getContext('2d');
+  ctx.putImageData(imgData, 0, 0);
 }
